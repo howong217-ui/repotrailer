@@ -1,0 +1,55 @@
+name: Bug report
+description: Report a reproducible RepoTrailer problem.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping make the first run boringly reliable.
+  - type: input
+    id: version
+    attributes:
+      label: RepoTrailer version or commit
+      placeholder: v0.1.0 or a commit SHA
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Node.js version, and shell.
+      placeholder: macOS 15, Node.js 22.14.0, zsh
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: Repository source
+      options:
+        - Local directory
+        - owner/repo
+        - GitHub URL
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: Remove private paths or repository names if needed.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and logs
+      description: Do not paste tokens, credentials, or private repository content.
+    validations:
+      required: true

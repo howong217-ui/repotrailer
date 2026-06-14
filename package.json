@@ -1,0 +1,56 @@
+{
+  "name": "repotrailer",
+  "version": "0.1.0",
+  "description": "Turn any GitHub repository into a launch trailer, social card, and release copy.",
+  "type": "module",
+  "bin": {
+    "repotrailer": "./bin/repotrailer.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates",
+    "skills",
+    "assets/cover.svg",
+    "assets/demo-preview.png",
+    ".codex-plugin",
+    "action.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "check": "for file in bin/*.js src/*.js; do node --check \"$file\" || exit 1; done && npm test",
+    "demo": "node bin/repotrailer.js examples/demo-repo --out examples/generated --no-video",
+    "prepublishOnly": "npm run check"
+  },
+  "keywords": [
+    "github",
+    "video",
+    "open-source",
+    "launch",
+    "hyperframes",
+    "developer-tools",
+    "social-card",
+    "cli"
+  ],
+  "author": "Hogan Wong",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/howong217-ui/repotrailer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/howong217-ui/repotrailer/issues"
+  },
+  "homepage": "https://github.com/howong217-ui/repotrailer#readme",
+  "dependencies": {
+    "gsap": "^3.15.0"
+  }
+}

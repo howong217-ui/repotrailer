@@ -1,0 +1,33 @@
+name: Feature request
+description: Propose a source-grounded launch workflow improvement.
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What launch problem would this solve?
+      description: Describe the current workflow and where it breaks down.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Repository evidence
+      description: Which existing repository facts should power this feature?
+    validations:
+      required: true
+  - type: checkboxes
+    id: grounding
+    attributes:
+      label: Source-grounding check
+      options:
+        - label: This proposal does not require inventing adoption, benchmark, or popularity claims.
+          required: true

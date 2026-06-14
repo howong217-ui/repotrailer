@@ -1,0 +1,38 @@
+name: RepoTrailer
+description: Generate a source-grounded launch kit for a GitHub repository.
+branding:
+  icon: film
+  color: green
+inputs:
+  source:
+    description: Repository path inside the checkout.
+    required: false
+    default: .
+  output:
+    description: Output directory for generated launch assets.
+    required: false
+    default: repotrailer-out
+outputs:
+  manifest:
+    description: Path to the generated RepoTrailer manifest.
+    value: ${{ steps.generate.outputs.manifest }}
+runs:
+  using: composite
+  steps:
+    - name: Install RepoTrailer runtime
+      shell: bash
+      run: npm ci --prefix "$GITHUB_ACTION_PATH" --ignore-scripts --no-audit --no-fund
+    - name: Generate launch kit
+      id: generate
+      shell: bash
+      run: |
+        node "$GITHUB_ACTION_PATH/bin/repotrailer.js" \
+          "${{ inputs.source }}" \
+          --out "${{ inputs.output }}" \
+          --no-video
+        echo "manifest=${{ inputs.output }}/repotrailer.json" >> "$GITHUB_OUTPUT"
+    - name: Upload launch kit
+      uses: actions/upload-artifact@v4
+      with:
+        name: repotrailer-launch-kit
+        path: ${{ inputs.output }}

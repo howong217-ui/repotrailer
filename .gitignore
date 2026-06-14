@@ -1,0 +1,8 @@
+node_modules/
+repotrailer-out/
+examples/generated/
+renders/
+.DS_Store
+*.mp4
+*.webm
+*.log
