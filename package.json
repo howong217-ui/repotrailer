@@ -12,6 +12,7 @@
   "files": [
     "bin",
     "src",
+    "scripts",
     "templates",
     "skills",
     "assets/cover.svg",
@@ -23,8 +24,9 @@
   ],
   "scripts": {
     "test": "node --test",
-    "check": "for file in bin/*.js src/*.js; do node --check \"$file\" || exit 1; done && npm test",
+    "check": "for file in bin/*.js src/*.js scripts/*.mjs; do node --check \"$file\" || exit 1; done && npm test",
     "demo": "node bin/repotrailer.js examples/demo-repo --out examples/generated --no-video",
+    "growth": "node scripts/growth-check.mjs",
     "prepublishOnly": "npm run check"
   },
   "keywords": [

@@ -116,3 +116,21 @@ generated story feels accurate.
 - first-run failures by platform
 - number of shared generated assets
 - issues from real use rather than feature speculation
+
+## Operating loop
+
+Run the growth cockpit twice per day:
+
+```bash
+npm run growth
+```
+
+If the required pace is above the current pace, ship one visible improvement
+before spending more energy on promotion. The default order is:
+
+1. Make the README clearer.
+2. Add or improve one generated example.
+3. Open one small contribution path.
+4. Share one specific artifact with one specific audience.
+
+The target is 100 stars. The method is real developer value, not fake numbers.
