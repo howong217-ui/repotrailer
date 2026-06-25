@@ -29,36 +29,75 @@ function run(command, commandArgs) {
   }
 }
 
+function runJson(command, commandArgs) {
+  const output = run(command, commandArgs);
+  if (!output) return null;
+  try {
+    return JSON.parse(output);
+  } catch {
+    return null;
+  }
+}
+
+function parseRepo(input) {
+  const [owner, name] = input.split("/");
+  if (!owner || !name) {
+    throw new Error(`Expected owner/name repository, received: ${input}`);
+  }
+  return { owner, name };
+}
+
+async function fetchJson(path) {
+  const response = await fetch(`https://api.github.com/${path}`, {
+    headers: { "User-Agent": "repotrailer-growth-check" },
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) {
+    throw new Error(`GitHub API request failed: ${response.status} ${path}`);
+  }
+  return response.json();
+}
+
+async function fetchLatestRelease(repository) {
+  const release = await fetchJson(`repos/${repository}/releases/latest`);
+  if (!release) return null;
+  return {
+    name: release.name,
+    tagName: release.tag_name,
+    url: release.html_url,
+  };
+}
+
 async function getRepoMetrics() {
-  const ghOutput = run("gh", [
+  const ghMetrics = runJson("gh", [
     "repo",
     "view",
     repo,
     "--json",
     "stargazerCount,forkCount,watchers,issues,latestRelease,url,pushedAt",
   ]);
-  if (ghOutput) return JSON.parse(ghOutput);
-
-  const response = await fetch(`https://api.github.com/repos/${repo}`, {
-    headers: { "User-Agent": "repotrailer-growth-check" },
-  });
-  if (!response.ok) {
-    throw new Error(`GitHub API request failed: ${response.status}`);
+  if (ghMetrics) {
+    if (!ghMetrics.latestRelease) {
+      ghMetrics.latestRelease = await fetchLatestRelease(repo).catch(() => null);
+    }
+    return ghMetrics;
   }
-  const data = await response.json();
+
+  const data = await fetchJson(`repos/${repo}`);
+  if (!data) throw new Error(`Repository not found: ${repo}`);
   return {
     stargazerCount: data.stargazers_count,
     forkCount: data.forks_count,
     watchers: { totalCount: data.subscribers_count ?? data.watchers_count },
     issues: { totalCount: data.open_issues_count },
-    latestRelease: null,
+    latestRelease: await fetchLatestRelease(repo).catch(() => null),
     url: data.html_url,
     pushedAt: data.pushed_at,
   };
 }
 
-function getRuns() {
-  const runsOutput = run("gh", [
+async function getRuns() {
+  const ghRuns = runJson("gh", [
     "run",
     "list",
     "--repo",
@@ -68,15 +107,28 @@ function getRuns() {
     "--json",
     "workflowName,status,conclusion,headBranch,event,createdAt,databaseId",
   ]);
-  return runsOutput ? JSON.parse(runsOutput) : [];
+  if (ghRuns) return ghRuns;
+
+  const runs = await fetchJson(`repos/${repo}/actions/runs?per_page=5`).catch(() => null);
+  if (!runs?.workflow_runs) return [];
+  return runs.workflow_runs.map((run) => ({
+    workflowName: run.name,
+    status: run.status,
+    conclusion: run.conclusion,
+    headBranch: run.head_branch,
+    event: run.event,
+    createdAt: run.created_at,
+    databaseId: run.id,
+  }));
 }
 
 function round(value) {
   return Math.round(value * 10) / 10;
 }
 
+parseRepo(repo);
 const metrics = await getRepoMetrics();
-const runs = getRuns();
+const runs = await getRuns();
 const now = new Date();
 const elapsedDays = Math.max((now - launchDate) / 86400000, 0);
 const remainingDays = Math.max(launchDays - elapsedDays, 0);

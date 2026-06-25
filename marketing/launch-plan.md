@@ -22,7 +22,7 @@ RepoTrailer.
 - MP4 demo under 20 seconds
 - Terminal recording showing one command to output
 - README tested in a logged-out browser
-- Three example trailers from visually different repositories
+- Three example cards from visually different repositories
 - Issues enabled with `good first issue` candidates
 
 ## Seven days

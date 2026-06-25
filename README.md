@@ -87,6 +87,18 @@ If RepoTrailer saves you a launch asset or helps explain a repository faster,
 star the project so the next release can focus on the workflows people actually
 use.
 
+## Examples
+
+RepoTrailer has been smoke-tested on different kinds of public repositories:
+
+| Repository | What it shows |
+|---|---|
+| [`sindresorhus/ky`](https://github.com/sindresorhus/ky) | TypeScript library with a concise API story |
+| [`Textualize/rich`](https://github.com/Textualize/rich) | Python project with visual terminal output |
+| [`BurntSushi/ripgrep`](https://github.com/BurntSushi/ripgrep) | CLI tool with a strong installation beat |
+
+See the generated cards in [docs/examples.md](docs/examples.md).
+
 ## Why this one
 
 **Local-first.** Local repositories stay local. Public GitHub URLs are cloned
