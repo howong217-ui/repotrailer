@@ -26,13 +26,13 @@ Use the first matching diagnosis:
 
 ## Current decision
 
-As of 2026-06-25:
+As of 2026-06-25 22:00 UTC:
 
 - Stars: 0/100.
-- Primary blocker: proof problem plus no external reach.
-- Response: add a real examples gallery, improve growth-check fallback, and keep
-  outbound posts in `marketing/outreach-kit.md` until the maintainer explicitly
-  confirms where to post.
+- Primary blocker: reach problem plus weak release-page conversion.
+- Response: keep outbound posts in `marketing/outreach-kit.md`, prepare an
+  improved release body in `marketing/release-v0.1.0-notes.md`, and do not edit
+  the public release until the maintainer explicitly confirms.
 
 ## Rule
 
