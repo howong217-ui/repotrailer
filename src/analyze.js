@@ -148,22 +148,28 @@ async function findReadme(root) {
 }
 
 function readmeMetadata(markdown, fallbackName) {
-  const lines = markdown.split(/\r?\n/);
-  const heading = lines
+  const proseMarkdown = markdown.replace(/```[\s\S]*?```/g, "");
+  const introLines = proseMarkdown.split(/\r?\n/).slice(0, 40);
+  const cleanHeading = (value) => {
+    if (!value) return null;
+    const withoutImages = value.replace(/<img\b[^>]*>/gi, "");
+    const text = stripMarkdown(withoutImages.replace(/<[^>]+>/g, " ")).trim();
+    return text.length >= 2 ? text : null;
+  };
+  const heading = introLines
     .map((line) => (
-      line.match(/^#\s+(.+)$/)?.[1]
-      || line.match(/^<h1\b[^>]*>(.*?)<\/h1>$/i)?.[1]
+      cleanHeading(line.match(/^#\s+(.+)$/)?.[1])
     ))
-    .find(Boolean);
+    .find(Boolean)
+    || cleanHeading(proseMarkdown.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1]);
 
-  const paragraphs = markdown
-    .replace(/```[\s\S]*?```/g, "")
+  const paragraphs = proseMarkdown
     .split(/\n\s*\n/)
     .map(stripMarkdown)
     .filter((value) => value.length >= 24)
     .filter((value) => !/^(build|install|usage|features|license)\b/i.test(value));
 
-  const bullets = lines
+  const bullets = proseMarkdown.split(/\r?\n/)
     .map((line) => line.match(/^\s*[-*]\s+(.+)$/)?.[1])
     .filter(Boolean)
     .map(stripMarkdown)

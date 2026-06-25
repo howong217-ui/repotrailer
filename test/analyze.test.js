@@ -50,6 +50,42 @@ A sufficiently long description for the generated launch story.
   assert.equal(metadata.title, "RepoTrailer");
 });
 
+test("ignores multiline image-only HTML headings when choosing README title", () => {
+  const metadata = __test.readmeMetadata(
+    `<h1>
+  <img src="doc/logo-header.svg" alt="in your .bashrc/.zshrc/ rc">
+</h1>
+
+A cat(1) clone with syntax highlighting and Git integration.
+`,
+    "bat",
+  );
+
+  assert.equal(metadata.title, "bat");
+  assert.match(metadata.description, /syntax highlighting/);
+});
+
+test("does not use code block comments as README titles", () => {
+  const metadata = __test.readmeMetadata(
+    `<p align="center">
+  <img src="doc/logo-header.svg" alt="bat - a cat clone with wings"><br>
+  A <i>cat(1)</i> clone with syntax highlighting and Git integration.
+</p>
+
+### Automatic paging
+
+\`\`\`bash
+# in your .bashrc/.zshrc/*rc
+alias cat='bat --paging=never'
+\`\`\`
+`,
+    "bat",
+  );
+
+  assert.equal(metadata.title, "bat");
+  assert.match(metadata.description, /syntax highlighting/);
+});
+
 test("summarizes source languages by byte weight", () => {
   const languages = __test.summarizeLanguages([
     { extension: ".ts", bytes: 900 },
