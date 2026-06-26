@@ -65,6 +65,7 @@ async function fetchLatestRelease(repository) {
     name: release.name,
     tagName: release.tag_name,
     url: release.html_url,
+    body: release.body ?? "",
   };
 }
 
@@ -74,7 +75,7 @@ async function getRepoMetrics() {
     "view",
     repo,
     "--json",
-    "stargazerCount,forkCount,watchers,issues,latestRelease,url,pushedAt",
+    "stargazerCount,forkCount,watchers,issues,latestRelease,url,pushedAt,defaultBranchRef",
   ]);
   if (ghMetrics) {
     if (!ghMetrics.latestRelease) {
@@ -93,6 +94,57 @@ async function getRepoMetrics() {
     latestRelease: await fetchLatestRelease(repo).catch(() => null),
     url: data.html_url,
     pushedAt: data.pushed_at,
+    defaultBranchRef: { name: data.default_branch },
+  };
+}
+
+async function getReleaseQuality(latestRelease) {
+  if (!latestRelease?.tagName) return null;
+  const details = runJson("gh", [
+    "release",
+    "view",
+    latestRelease.tagName,
+    "--repo",
+    repo,
+    "--json",
+    "body",
+  ]);
+  const body = details?.body ?? latestRelease.body ?? "";
+  const bodyCharacters = body.length;
+  const hasInstallCommand = /npx|npm|pnpm|yarn|bun/i.test(body);
+  const hasExamplesLink = /examples|demo|gallery/i.test(body);
+  return {
+    bodyCharacters,
+    hasInstallCommand,
+    hasExamplesLink,
+    status: bodyCharacters >= 500 && hasInstallCommand && hasExamplesLink
+      ? "ready"
+      : "thin",
+  };
+}
+
+function getLocalState(defaultBranch) {
+  if (run("git", ["rev-parse", "--is-inside-work-tree"]) !== "true") {
+    return null;
+  }
+  const branch = run("git", ["branch", "--show-current"]) || null;
+  const head = run("git", ["rev-parse", "--short", "HEAD"]) || null;
+  const remoteRef = `origin/${defaultBranch || "main"}`;
+  const ahead = Number.parseInt(
+    run("git", ["rev-list", "--count", `${remoteRef}..HEAD`]),
+    10,
+  ) || 0;
+  const behind = Number.parseInt(
+    run("git", ["rev-list", "--count", `HEAD..${remoteRef}`]),
+    10,
+  ) || 0;
+  return {
+    branch,
+    head,
+    remoteRef,
+    ahead,
+    behind,
+    hasUncommittedChanges: run("git", ["status", "--short"]).length > 0,
   };
 }
 
@@ -129,6 +181,8 @@ function round(value) {
 parseRepo(repo);
 const metrics = await getRepoMetrics();
 const runs = await getRuns();
+const releaseQuality = await getReleaseQuality(metrics.latestRelease);
+const localState = getLocalState(metrics.defaultBranchRef?.name);
 const now = new Date();
 const elapsedDays = Math.max((now - launchDate) / 86400000, 0);
 const remainingDays = Math.max(launchDays - elapsedDays, 0);
@@ -169,6 +223,8 @@ const report = {
         url: metrics.latestRelease.url,
       }
     : null,
+  releaseQuality,
+  localState,
   recentRuns: runs.map((run) => ({
     workflow: run.workflowName,
     status: run.status,
@@ -198,6 +254,24 @@ if (outputJson) {
   console.log(`- Status: ${status}`);
   if (report.latestRelease) {
     console.log(`- Latest release: ${report.latestRelease.tagName}`);
+    if (report.releaseQuality) {
+      console.log(
+        `- Release page: ${report.releaseQuality.status} `
+          + `(${report.releaseQuality.bodyCharacters} chars)`,
+      );
+    }
+  }
+  if (report.localState) {
+    console.log(`- Local branch: ${report.localState.branch ?? "detached"} @ ${report.localState.head}`);
+    console.log(
+      `- Local ahead/behind ${report.localState.remoteRef}: `
+        + `${report.localState.ahead}/${report.localState.behind}`,
+    );
+    console.log(
+      `- Uncommitted changes: ${
+        report.localState.hasUncommittedChanges ? "yes" : "no"
+      }`,
+    );
   }
   if (report.recentRuns.length > 0) {
     console.log("");
