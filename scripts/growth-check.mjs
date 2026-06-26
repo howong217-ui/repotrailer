@@ -75,7 +75,7 @@ async function getRepoMetrics() {
     "view",
     repo,
     "--json",
-    "stargazerCount,forkCount,watchers,issues,latestRelease,url,pushedAt,defaultBranchRef",
+    "stargazerCount,forkCount,watchers,issues,latestRelease,url,pushedAt,defaultBranchRef,homepageUrl,repositoryTopics",
   ]);
   if (ghMetrics) {
     if (!ghMetrics.latestRelease) {
@@ -93,9 +93,40 @@ async function getRepoMetrics() {
     issues: { totalCount: data.open_issues_count },
     latestRelease: await fetchLatestRelease(repo).catch(() => null),
     url: data.html_url,
+    homepageUrl: data.homepage,
+    repositoryTopics: [],
     pushedAt: data.pushed_at,
     defaultBranchRef: { name: data.default_branch },
   };
+}
+
+async function getPagesQuality(homepageUrl) {
+  const pages = runJson("gh", ["api", `repos/${repo}/pages`])
+    ?? await fetchJson(`repos/${repo}/pages`).catch(() => null);
+  const url = pages?.html_url ?? homepageUrl ?? null;
+  if (!url) return null;
+
+  const result = {
+    url,
+    githubStatus: pages?.status ?? null,
+    source: pages?.source ?? null,
+    homepageUrl: homepageUrl ?? null,
+    httpStatus: null,
+    hasStarCallToAction: false,
+    status: "missing",
+  };
+
+  const output = run("curl", ["-L", "-s", "-w", "\n%{http_code}", url]);
+  const splitAt = output.lastIndexOf("\n");
+  if (splitAt !== -1) {
+    const html = output.slice(0, splitAt);
+    result.httpStatus = Number.parseInt(output.slice(splitAt + 1), 10) || null;
+    result.hasStarCallToAction = /Star on GitHub|github\.com\/howong217-ui\/repotrailer/i.test(html);
+  }
+  result.status = result.httpStatus === 200 && result.hasStarCallToAction
+    ? "ready"
+    : "needs-work";
+  return result;
 }
 
 async function getReleaseQuality(latestRelease) {
@@ -182,6 +213,7 @@ parseRepo(repo);
 const metrics = await getRepoMetrics();
 const runs = await getRuns();
 const releaseQuality = await getReleaseQuality(metrics.latestRelease);
+const pagesQuality = await getPagesQuality(metrics.homepageUrl);
 const localState = getLocalState(metrics.defaultBranchRef?.name);
 const now = new Date();
 const elapsedDays = Math.max((now - launchDate) / 86400000, 0);
@@ -224,6 +256,8 @@ const report = {
       }
     : null,
   releaseQuality,
+  pagesQuality,
+  topics: metrics.repositoryTopics?.map((topic) => topic.name ?? topic) ?? [],
   localState,
   recentRuns: runs.map((run) => ({
     workflow: run.workflowName,
@@ -271,6 +305,12 @@ if (outputJson) {
       `- Uncommitted changes: ${
         report.localState.hasUncommittedChanges ? "yes" : "no"
       }`,
+    );
+  }
+  if (report.pagesQuality) {
+    console.log(
+      `- Pages: ${report.pagesQuality.status} `
+        + `(${report.pagesQuality.httpStatus ?? "no HTTP"})`,
     );
   }
   if (report.recentRuns.length > 0) {
