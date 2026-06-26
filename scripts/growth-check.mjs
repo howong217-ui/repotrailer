@@ -94,7 +94,7 @@ async function getRepoMetrics() {
     latestRelease: await fetchLatestRelease(repo).catch(() => null),
     url: data.html_url,
     homepageUrl: data.homepage,
-    repositoryTopics: [],
+    repositoryTopics: data.topics ?? [],
     pushedAt: data.pushed_at,
     defaultBranchRef: { name: data.default_branch },
   };
@@ -116,12 +116,18 @@ async function getPagesQuality(homepageUrl) {
     status: "missing",
   };
 
-  const output = run("curl", ["-L", "-s", "-w", "\n%{http_code}", url]);
-  const splitAt = output.lastIndexOf("\n");
-  if (splitAt !== -1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const output = run("curl", ["-L", "-s", "-w", "\n%{http_code}", url]);
+    const splitAt = output.lastIndexOf("\n");
+    if (splitAt === -1) continue;
+
     const html = output.slice(0, splitAt);
     result.httpStatus = Number.parseInt(output.slice(splitAt + 1), 10) || null;
-    result.hasStarCallToAction = /Star on GitHub|github\.com\/howong217-ui\/repotrailer/i.test(html);
+    result.hasStarCallToAction =
+      /Star on GitHub|github\.com\/howong217-ui\/repotrailer/i.test(html);
+    if (result.httpStatus === 200 && result.hasStarCallToAction) {
+      break;
+    }
   }
   result.status = result.httpStatus === 200 && result.hasStarCallToAction
     ? "ready"
@@ -131,16 +137,24 @@ async function getPagesQuality(homepageUrl) {
 
 async function getReleaseQuality(latestRelease) {
   if (!latestRelease?.tagName) return null;
-  const details = runJson("gh", [
-    "release",
-    "view",
-    latestRelease.tagName,
-    "--repo",
-    repo,
-    "--json",
-    "body",
-  ]);
-  const body = details?.body ?? latestRelease.body ?? "";
+  let details = null;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    details = runJson("gh", [
+      "release",
+      "view",
+      latestRelease.tagName,
+      "--repo",
+      repo,
+      "--json",
+      "body",
+    ]);
+    if (details?.body) break;
+  }
+  const release = details?.body
+    ? details
+    : await fetchJson(`repos/${repo}/releases/tags/${latestRelease.tagName}`)
+      .catch(() => null);
+  const body = release?.body ?? latestRelease.body ?? "";
   const bodyCharacters = body.length;
   const hasInstallCommand = /npx|npm|pnpm|yarn|bun/i.test(body);
   const hasExamplesLink = /examples|demo|gallery/i.test(body);

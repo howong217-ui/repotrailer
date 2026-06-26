@@ -64,7 +64,8 @@ for (const file of requiredFiles) {
 }
 
 const registry = tryRun("npm", ["view", packageInfo.name, "name", "--json"]);
-const nameAvailable = !registry.ok && /E404|not found/i.test(registry.stderr);
+const registryOutput = `${registry.stdout}\n${registry.stderr}`;
+const nameAvailable = !registry.ok && /E404|not found/i.test(registryOutput);
 if (registry.ok || !nameAvailable) {
   fail(`npm package name appears to exist: ${packageInfo.name}`);
 }
