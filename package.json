@@ -28,6 +28,7 @@
     "check": "for file in bin/*.js src/*.js scripts/*.mjs; do node --check \"$file\" || exit 1; done && npm test",
     "demo": "node bin/repotrailer.js examples/demo-repo --out examples/generated --no-video",
     "growth": "node scripts/growth-check.mjs",
+    "publish:check": "node scripts/publish-readiness.mjs",
     "prepublishOnly": "npm run check"
   },
   "keywords": [
