@@ -11,6 +11,6 @@
         <rect width="112" height="42" rx="21" fill="#17191e" stroke="#343842"/>
         <text x="56" y="27" text-anchor="middle" fill="#f5f2e9" font-size="17" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">Python</text>
       </g>
-  <text x="72" y="590" fill="#f5f2e9" font-size="18" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">README → TRAILER → LAUNCH</text>
+  <text x="72" y="590" fill="#f5f2e9" font-size="18" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">REPO → ASSETS → RELEASE</text>
   <text x="1128" y="590" text-anchor="end" fill="#9aa0aa" font-size="18" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">213 SOURCE FILES</text>
 </svg>

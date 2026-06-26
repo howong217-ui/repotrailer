@@ -1,15 +1,15 @@
 {
   "name": "repotrailer",
   "version": "0.1.0",
-  "description": "Turn the current repository into a launch trailer and share kit.",
+  "description": "Turn the current repository into README-ready launch assets.",
   "author": {
     "name": "Hogan Wong"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "RepoTrailer",
-    "shortDescription": "Make a launch trailer from any repository.",
-    "longDescription": "RepoTrailer analyzes real repository metadata and produces a video storyboard, browser preview, social card, and launch copy without an API key.",
+    "shortDescription": "Make launch assets from any repository.",
+    "longDescription": "RepoTrailer analyzes real repository metadata and produces a browser preview, social card, release copy, storyboard, and optional video without an API key.",
     "developerName": "Hogan Wong",
     "category": "Productivity",
     "capabilities": [

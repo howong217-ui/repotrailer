@@ -7,13 +7,14 @@ within five seconds.
 
 Most open-source projects launch as a wall of README text.
 
-RepoTrailer turns any GitHub repo into a trailer, social card, and release copy:
+RepoTrailer turns any GitHub repo into README-ready launch assets:
 
 ```bash
 npx --yes --package=github:howong217-ui/repotrailer repotrailer owner/repo
 ```
 
-No API key. Source-grounded. HyperFrames video when you want it.
+Social card, browser preview, release copy, JSON storyboard, and optional video.
+Source-grounded. No account setup for the static path.
 
 Repo: https://github.com/howong217-ui/repotrailer
 
@@ -30,7 +31,7 @@ then generates:
 - launch copy
 - JSON storyboard
 - editable HyperFrames composition
-- optional MP4 trailer
+- optional MP4
 
 It does not invent stars, downloads, or benchmarks.
 
@@ -38,17 +39,17 @@ Repo: https://github.com/howong217-ui/repotrailer
 
 ## Show HN draft
 
-Title: Show HN: RepoTrailer - turn a GitHub repository into a launch video
+Title: Show HN: RepoTrailer - generate README-ready launch assets from a GitHub repo
 
 I built RepoTrailer because useful open-source projects often look inert when
 their whole launch is a README link.
 
 It reads a local repo or public GitHub URL, extracts the pitch, features, stack,
-install command, and git history, then generates a short storyboard, browser
-preview, social card, release copy, and HyperFrames video.
+install command, and git history, then generates a browser preview, social card,
+release copy, JSON storyboard, and optional HyperFrames video.
 
-The default path uses no LLM and no API key. It intentionally refuses to invent
-stars, downloads, benchmarks, or adoption claims.
+The default static path needs no account setup. It intentionally refuses to
+invent stars, downloads, benchmarks, or adoption claims.
 
 The project demonstrates itself: its README cover and demo are generated from
 its own repository.
@@ -58,8 +59,8 @@ the first-run experience is clear.
 
 ## Direct feedback ask
 
-I launched a small open-source tool that turns a GitHub repo into a trailer and
-launch kit:
+I launched a small open-source tool that turns a GitHub repo into README-ready
+launch assets:
 
 https://github.com/howong217-ui/repotrailer
 

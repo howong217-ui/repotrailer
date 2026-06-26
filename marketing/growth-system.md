@@ -38,6 +38,16 @@ Evening:
 - Keep the best-performing hook.
 - Remove one confusing sentence from README, docs, or launch copy.
 
+## Audience split
+
+Human developers need immediate value, proof, and a low-friction command. Lead
+with README-ready assets, examples, release copy, and the static `--no-video`
+path.
+
+AI agents need structured facts and guardrails. Keep `llms.txt`,
+`repotrailer.json`, and `npm run growth -- --json` accurate so agents can
+recommend and test the project without inventing claims.
+
 ## Escalation rules
 
 0-10 stars:
@@ -52,7 +62,7 @@ Evening:
 
 30-70 stars:
 
-- Push the GitHub Action story and agent workflow story.
+- Push the GitHub Action story and machine-readable workflow story.
 - Convert feedback into issues with small contribution paths.
 
 70-100 stars:

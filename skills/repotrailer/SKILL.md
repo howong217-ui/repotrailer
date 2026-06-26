@@ -1,6 +1,6 @@
 ---
 name: repotrailer
-description: Create a launch trailer, social card, browser preview, and release copy from the current local repository or a GitHub URL. Use when the user wants to promote, launch, showcase, announce, or make a demo video for an open-source project.
+description: Create README-ready launch assets, a social card, browser preview, release copy, and optional video from the current local repository or a GitHub URL. Use when the user wants to promote, launch, showcase, announce, or make a demo for an open-source project.
 ---
 
 # RepoTrailer
@@ -40,7 +40,7 @@ benchmarks, contributors, or adoption claims.
 - `social-card.svg`: 1200x630 README and social image
 - `launch-copy.md`: short post, Show HN draft, README snippet, topics
 - `repotrailer.json`: source-grounded repository metadata and storyboard
-- `trailer.mp4`: rendered video when HyperFrames is available
+- `trailer.mp4`: optional rendered video when HyperFrames is available
 
 ## Guardrails
 

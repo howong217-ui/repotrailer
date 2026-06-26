@@ -1,7 +1,7 @@
 {
   "name": "repotrailer",
   "version": "0.1.0",
-  "description": "Turn any GitHub repository into a launch trailer, social card, and release copy.",
+  "description": "Turn any GitHub repository into README-ready launch assets.",
   "type": "module",
   "bin": {
     "repotrailer": "./bin/repotrailer.js"
@@ -19,6 +19,7 @@
     "assets/demo-preview.png",
     ".codex-plugin",
     "action.yml",
+    "llms.txt",
     "README.md",
     "LICENSE"
   ],
@@ -31,7 +32,8 @@
   },
   "keywords": [
     "github",
-    "video",
+    "readme",
+    "release",
     "open-source",
     "launch",
     "hyperframes",

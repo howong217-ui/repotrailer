@@ -1,8 +1,8 @@
 # RepoTrailer v0.1.0
 
-RepoTrailer turns a GitHub repository into a compact launch kit: browser
-preview, social card, launch copy, JSON storyboard, editable HyperFrames
-composition, and optional MP4 trailer.
+RepoTrailer turns a GitHub repository into README-ready launch assets: social
+card, browser preview, release copy, JSON storyboard, editable HyperFrames
+composition, and optional MP4.
 
 It is built for maintainers who already have a useful project but need a faster
 way to show why it matters.
@@ -21,7 +21,7 @@ Generate from a public GitHub repository:
 npx --yes --package=github:howong217-ui/repotrailer repotrailer owner/repo --no-video
 ```
 
-Omit `--no-video` to render the HyperFrames MP4 trailer when Chrome/Chromium
+Omit `--no-video` to render the optional HyperFrames MP4 when Chrome/Chromium
 and FFmpeg are available.
 
 ## What is included
@@ -31,7 +31,7 @@ and FFmpeg are available.
 - `launch-copy.md`: short post and Show HN draft
 - `repotrailer.json`: auditable source facts and scene timings
 - `hyperframes/`: editable video composition
-- `trailer.mp4`: rendered video when video mode is enabled
+- `trailer.mp4`: optional rendered video when video mode is enabled
 
 ## Examples
 
@@ -45,7 +45,7 @@ See the gallery: https://github.com/howong217-ui/repotrailer/blob/main/docs/exam
 
 ## Design rules
 
-- No API key required for the default path.
+- No hosted service or API key required for the default static path.
 - Claims come from README, package metadata, source files, and git history.
 - It does not invent stars, downloads, benchmarks, or adoption claims.
 - Local repositories stay local; public GitHub URLs are cloned to a temporary
