@@ -17,6 +17,12 @@
 </p>
 
 <p align="center">
+  <a href="https://howong217-ui.github.io/repotrailer/">Live gallery</a> ·
+  <a href="https://github.com/howong217-ui/repotrailer/releases/tag/v0.1.0">v0.1.0 release</a> ·
+  <a href="#quick-start">Quick start</a>
+</p>
+
+<p align="center">
   <img src="assets/cover.svg" width="100%" alt="RepoTrailer cover">
 </p>
 
@@ -98,6 +104,9 @@ RepoTrailer has been smoke-tested on different kinds of public repositories:
 | [`BurntSushi/ripgrep`](https://github.com/BurntSushi/ripgrep) | CLI tool with a strong installation beat |
 
 See the generated cards in [docs/examples.md](docs/examples.md).
+
+There is also a GitHub Pages landing page:
+<https://howong217-ui.github.io/repotrailer/>.
 
 ## Why this one
 

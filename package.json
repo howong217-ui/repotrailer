@@ -51,7 +51,7 @@
   "bugs": {
     "url": "https://github.com/howong217-ui/repotrailer/issues"
   },
-  "homepage": "https://github.com/howong217-ui/repotrailer#readme",
+  "homepage": "https://howong217-ui.github.io/repotrailer/",
   "dependencies": {
     "gsap": "^3.15.0"
   }
