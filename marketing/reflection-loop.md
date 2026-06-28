@@ -26,13 +26,22 @@ Use the first matching diagnosis:
 
 ## Current decision
 
-As of 2026-06-25 22:00 UTC:
+As of 2026-06-28 09:25 UTC:
 
 - Stars: 0/100.
-- Primary blocker: reach problem plus weak release-page conversion.
-- Response: keep outbound posts in `marketing/outreach-kit.md`, prepare an
-  improved release body in `marketing/release-v0.1.0-notes.md`, and do not edit
-  the public release until the maintainer explicitly confirms.
+- Required pace: 30.8 stars/day with 3.3 launch days remaining.
+- Primary blocker: friction plus reach. The public GitHub install path works,
+  but the npm package is not published, so the short `npx repotrailer owner/repo`
+  command is unavailable. Local `main` is also ahead of `origin/main` by two
+  commits, with local reflection edits still uncommitted.
+- Smoke status: public README `npx --package=github:howong217-ui/repotrailer`
+  passed this run for a public GitHub target, but GitHub API and npm registry
+  checks still saw connection resets.
+- Local improvement: `scripts/publish-readiness.mjs` now distinguishes an npm
+  registry network error from a real package-name collision.
+- Response: push the two local commits, publish `repotrailer@0.1.0` from the
+  maintainer npm account, then update README, Pages, release notes, and outreach
+  copy to lead with the short npm command.
 
 ## Rule
 

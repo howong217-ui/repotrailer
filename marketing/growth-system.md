@@ -2,9 +2,10 @@
 
 Objective: reach 100 GitHub stars from real developers during the first launch
 week. Stars are an external behavior, so the operating rule is simple: inspect
-the funnel every day, remove one blocker, and ship one visible reason to care.
+the funnel every two hours during launch week, remove one blocker, and ship or
+prepare one visible reason to care.
 
-## Daily cockpit
+## Two-hour cockpit
 
 Run:
 
@@ -19,7 +20,18 @@ The check reports:
 - elapsed launch days and required stars per day
 - latest release and recent GitHub Actions status
 
+Also verify the public README install command with `--no-video`, and keep the
+npm package gate visible until `npx repotrailer owner/repo` is live.
+
 ## Cadence
+
+Every two hours:
+
+- Run `npm run growth -- --json`.
+- Run the public README `npx` command with `--no-video`.
+- Check whether local commits are ahead of `origin/main`.
+- Classify the blocker as reach, proof, friction, trust, or contribution.
+- End with one prepared improvement or one explicit no-change reason.
 
 Morning:
 

@@ -12,16 +12,17 @@ const requiredFiles = new Set([
   "action.yml",
 ]);
 
-function run(command, args) {
+function run(command, args, options = {}) {
   return execFileSync(command, args, {
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
+    timeout: options.timeoutMs ?? 60000,
   }).trim();
 }
 
-function tryRun(command, args) {
+function tryRun(command, args, options) {
   try {
-    return { ok: true, stdout: run(command, args), stderr: "" };
+    return { ok: true, stdout: run(command, args, options), stderr: "" };
   } catch (error) {
     return {
       ok: false,
@@ -29,6 +30,20 @@ function tryRun(command, args) {
       stderr: error.stderr?.trim?.() ?? error.message,
     };
   }
+}
+
+function classifyRegistryResult(result) {
+  const output = `${result.stdout}\n${result.stderr}`;
+  if (result.ok) {
+    return { status: "exists", output };
+  }
+  if (/E404|404 Not Found|not found/i.test(output)) {
+    return { status: "available", output };
+  }
+  if (/ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|network|proxy|socket hang up/i.test(output)) {
+    return { status: "unknown", output };
+  }
+  return { status: "unknown", output };
 }
 
 function fail(message) {
@@ -63,11 +78,15 @@ for (const file of requiredFiles) {
   }
 }
 
-const registry = tryRun("npm", ["view", packageInfo.name, "name", "--json"]);
-const registryOutput = `${registry.stdout}\n${registry.stderr}`;
-const nameAvailable = !registry.ok && /E404|not found/i.test(registryOutput);
-if (registry.ok || !nameAvailable) {
+const registry = tryRun("npm", ["view", packageInfo.name, "name", "--json"], {
+  timeoutMs: 30000,
+});
+const registryStatus = classifyRegistryResult(registry);
+const nameAvailable = registryStatus.status === "available";
+if (registryStatus.status === "exists") {
   fail(`npm package name appears to exist: ${packageInfo.name}`);
+} else if (!nameAvailable) {
+  fail(`could not verify npm package availability due to registry error: ${registryStatus.output.split("\n").find(Boolean) ?? "unknown error"}`);
 }
 
 if (process.exitCode) {
