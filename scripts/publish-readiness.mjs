@@ -24,10 +24,12 @@ function tryRun(command, args, options) {
   try {
     return { ok: true, stdout: run(command, args, options), stderr: "" };
   } catch (error) {
+    const stdout = error.stdout?.trim?.() ?? "";
+    const stderr = error.stderr?.trim?.() || error.message;
     return {
       ok: false,
-      stdout: error.stdout?.trim?.() ?? "",
-      stderr: error.stderr?.trim?.() ?? error.message,
+      stdout,
+      stderr,
     };
   }
 }

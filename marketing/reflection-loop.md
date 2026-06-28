@@ -26,20 +26,21 @@ Use the first matching diagnosis:
 
 ## Current decision
 
-As of 2026-06-28 09:25 UTC:
+As of 2026-06-28 11:25 UTC:
 
 - Stars: 0/100.
-- Required pace: 30.8 stars/day with 3.3 launch days remaining.
+- Required pace: 31.6 stars/day with 3.2 launch days remaining.
 - Primary blocker: friction plus reach. The public GitHub install path works,
   but the npm package is not published, so the short `npx repotrailer owner/repo`
-  command is unavailable. Local `main` is also ahead of `origin/main` by two
-  commits, with local reflection edits still uncommitted.
+  command is unavailable. Local `main` is ahead of `origin/main`, so the public
+  repository still lacks the latest monitoring fixes.
 - Smoke status: public README `npx --package=github:howong217-ui/repotrailer`
-  passed this run for a public GitHub target, but GitHub API and npm registry
-  checks still saw connection resets.
+  passed this run for a public GitHub target. GitHub repo/issues API and npm
+  registry checks still saw connection resets.
 - Local improvement: `scripts/publish-readiness.mjs` now distinguishes an npm
-  registry network error from a real package-name collision.
-- Response: push the two local commits, publish `repotrailer@0.1.0` from the
+  registry network error from a real package-name collision, and preserves the
+  underlying error message when stderr is empty.
+- Response: push the local commits, publish `repotrailer@0.1.0` from the
   maintainer npm account, then update README, Pages, release notes, and outreach
   copy to lead with the short npm command.
 
