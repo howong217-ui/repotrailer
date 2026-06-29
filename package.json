@@ -4,7 +4,7 @@
   "description": "Turn any GitHub repository into README-ready launch assets.",
   "type": "module",
   "bin": {
-    "repotrailer": "./bin/repotrailer.js"
+    "repotrailer": "bin/repotrailer.js"
   },
   "exports": {
     ".": "./src/index.js"
